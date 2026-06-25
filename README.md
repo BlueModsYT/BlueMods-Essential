@@ -115,5 +115,5 @@ This project is licensed under the **GNU AGPLv3**, allowing you to modify.
 
 Contact us by joining our official Discord server for bug fixes and suggestions.
 <p align="center">
-  <img src="https://bluemods.neocities.org/p/ic_bes.png" alt="BlueMods" width="350" height="100" href="https://dsc.gg/bluemods">
+  <img src="https://bluemods.neocities.org/p/ic_bes.png" alt="BlueMods" width="350" height="200" href="https://dsc.gg/bluemods">
 </p>
