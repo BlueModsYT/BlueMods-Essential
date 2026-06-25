@@ -69,7 +69,7 @@ The prevention system in our addon is **basic**, meaning not all exploits or che
 
 ## 💡 Contribute  
 Want to help improve BlueMods AntiCheat?  
-- Report issues on our [GitHub Issues](https://github.com/BlueModsYT/BlueMods-AntiCheat/issues) page.  
+- Report issues on our [GitHub Issues](https://github.com/BlueModsYT/BlueMods-Essential/issues) page.  
 - Submit pull requests with bug fixes or new features.  
 - Join our community for discussions and updates.
 
