@@ -1,0 +1,91 @@
+## Manifest.json
+bluemods.ItemMenu=§bBlueMods §aアイテム
+entity.bluemods:ft.name=§bBlueMods §7| §a浮遊テキスト
+item.spawn_egg.entity.bluemods:ft.name=§bBlueMods §7| §a浮遊テキスト
+
+## Command Descriptions
+command.rtp.description=ランダムな場所にテレポートします。
+command.help.description=コマンドの一覧を表示します。
+command.ping.description=ワールドのTPSと自分のpingを表示します。
+command.about.description=アドオンの開発者を表示します。
+command.echest.description=エンダーチェストを受け取ります。
+command.warp.description=ワープ地点にテレポートするか、ワープの一覧を表示します。
+
+command.spawn.description=スポーン地点にテレポートして戻ります。
+command.rspawn.description=現在のスポーン地点を削除します。
+command.setspawn.description=新しいスポーン地点を設定します。
+
+command.home.description=自分のホームにテレポートします。
+command.homeset.description=ホームを作成または削除します。
+command.homelist.description=保存したホームをすべて一覧表示します。
+
+command.tpasend.description=他のプレイヤーにテレポート申請を送ります。
+command.tpaaccept.description=テレポート申請を承認します。
+command.tpadecline.description=テレポート申請を拒否します。
+command.tpacancel.description=自分のテレポート申請をキャンセルします。
+command.tpablock.description=プレイヤーからのテレポート申請をブロックします。
+command.tpaunblock.description=プレイヤーのブロックを解除します。
+
+command.gma.description=ゲームモードをアドベンチャーに変更します。
+command.gmc.description=ゲームモードをクリエイティブに変更します。
+command.gms.description=ゲームモードをサバイバルに変更します。
+command.gmsp.description=ゲームモードをスペクテイターに変更します。
+command.vanish.description=自分を見えなくします。
+
+command.kick.description=プレイヤーをサーバーからキックします。
+command.banadd.description=プレイヤーをBANまたはBAN解除します。
+command.banremove.description=プレイヤーのBANを解除します。
+command.banlist.description=BANされたプレイヤーの一覧です。
+command.cmdsf.description=コマンドブロックの出力を切り替えます。
+command.mute.description=プレイヤーをミュートします。
+command.mutelist.description=ミュートされたプレイヤーの一覧です。
+command.lagclear.description=ラグの原因となるエンティティを削除します。
+command.give.description=自分にアイテムを与えます。
+command.troll.description=他のプレイヤーを荒らします。
+command.banitem.description=アイテムの使用を禁止します。
+command.banitemlist.description=禁止アイテムの一覧です。
+command.clearchat.description=チャットをクリアします。
+command.gapple.description=金リンゴのクールダウンを設定します。
+command.ecwipe.description=プレイヤーのエンダーチェストを空にします。
+command.ecsee.description=他のプレイヤーのエンダーチェストを表示します（テキストのみ）。
+command.invsee.description=他のプレイヤーのインベントリを表示します（テキストのみ）。
+command.invwipe.description=プレイヤーのインベントリを空にします。
+command.pearl.description=エンダーパールのクールダウンを設定します。
+command.rank.description=プレイヤーにランクを付与または削除します。
+command.floatingtext.description=指定した場所に浮遊テキストを作成します。
+
+command.op.description=プレイヤーにオペレーター権限を付与または削除します。
+command.oplist.description=オペレーター権限を持つプレイヤーの一覧です。
+command.notify.description=プレイヤーがフラグされたときに通知します。
+command.notifylist.description=フラグされたプレイヤーの一覧です。
+
+command.chatconfigset.description=整数タイプのチャット設定オプションの値を設定します。
+command.chatconfig.description=真偽値タイプのチャット設定オプションを有効または無効にします。
+command.chatconfiglist.description=利用可能なチャット設定オプションを表示します。
+command.cmdtoggle.description=コマンドを切り替えます。
+command.cmdtogglelist.description=切り替え可能なコマンドの一覧です。
+command.welcome.description=ウェルカムメッセージを設定します。
+command.chatdisplay.description=チャットの表示スタイルを変更します。
+command.chatdisplayset.description=新しいチャットの表示スタイルを設定します。
+
+command.general.category=§e一般コマンド
+command.tpa.category=§eTPAコマンド
+command.home.category=§eホームコマンド
+command.gamemode.category=§eゲームモードコマンド
+command.moderation.category=§eモデレーションコマンド
+command.operator.category=§eオペレーターコマンド
+command.modules.category=§eモジュールコマンド
+
+## Mojang Defaults - Welcome Messages
+disconnect.kicked= 
+disconnect.kicked.reason= 
+multiplayer.player.joined= 
+multiplayer.player.left= 
+multiplayer.player.joined.realms= 
+multiplayer.player.left.realms= 
+multiplayer.player.joined.renamed=%s（旧名 %s）がゲームに参加しました
+multiplayer.player.joined.realms.renamed=%s（旧名 %s）がレルムに参加しました
+multiplayer.player.changeToPersona= 
+multiplayer.player.changeToSkin= 
+
+bluemods.page.info=現在のページ: %1$s/%2$s | §a!help <ページ> §7で他のカテゴリを表示できます。

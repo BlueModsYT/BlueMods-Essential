@@ -1,0 +1,91 @@
+## Manifest.json
+bluemods.ItemMenu=§bBlueMods §aObjetos
+entity.bluemods:ft.name=§bBlueMods §7| §aTexto flotante
+item.spawn_egg.entity.bluemods:ft.name=§bBlueMods §7| §aTexto flotante
+
+## Command Descriptions
+command.rtp.description=Teletransportarse a una ubicación aleatoria.
+command.help.description=Mostrar la lista de comandos.
+command.ping.description=Mostrar los TPS del mundo y tu ping.
+command.about.description=Mostrar el desarrollador del addon.
+command.echest.description=Recibir un cofre de ender.
+command.warp.description=Teletransportarse a un warp o ver la lista de warps.
+
+command.spawn.description=Teletransportarse de vuelta al punto de spawn.
+command.rspawn.description=Eliminar el punto de spawn actual.
+command.setspawn.description=Establecer un nuevo punto de spawn.
+
+command.home.description=Teletransportarse a tu hogar.
+command.homeset.description=Crear o eliminar un hogar.
+command.homelist.description=Listar todos tus hogares guardados.
+
+command.tpasend.description=Solicitar teletransportarse a otro jugador.
+command.tpaaccept.description=Aceptar una solicitud de teletransporte.
+command.tpadecline.description=Rechazar una solicitud de teletransporte.
+command.tpacancel.description=Cancelar tu solicitud de teletransporte.
+command.tpablock.description=Bloquear a un jugador para que no envíe solicitudes de teletransporte.
+command.tpaunblock.description=Desbloquear a un jugador.
+
+command.gma.description=Cambiar modo de juego a Aventura.
+command.gmc.description=Cambiar modo de juego a Creativo.
+command.gms.description=Cambiar modo de juego a Supervivencia.
+command.gmsp.description=Cambiar modo de juego a Espectador.
+command.vanish.description=Hacerte invisible.
+
+command.kick.description=Expulsar a un jugador del servidor.
+command.banadd.description=Banear o desbanear a un jugador.
+command.banremove.description=Eliminar un baneo de un jugador.
+command.banlist.description=Lista de jugadores baneados.
+command.cmdsf.description=Alternar salidas de bloques de comandos.
+command.mute.description=Silenciar a un jugador.
+command.mutelist.description=Lista de jugadores silenciados.
+command.lagclear.description=Eliminar entidades que causan lag.
+command.give.description=Darte un objeto a ti mismo.
+command.troll.description=Trolear a otro jugador.
+command.banitem.description=Prohibir el uso de un objeto.
+command.banitemlist.description=Lista de objetos prohibidos.
+command.clearchat.description=Limpiar el chat.
+command.gapple.description=Establecer un enfriamiento para gapples.
+command.ecwipe.description=Vaciar el cofre de ender de un jugador.
+command.ecsee.description=Ver el cofre de ender de otro jugador (solo texto).
+command.invsee.description=Ver el inventario de otro jugador (solo texto).
+command.invwipe.description=Vaciar el inventario de un jugador.
+command.pearl.description=Establecer un enfriamiento para la perla de ender.
+command.rank.description=Asignar o eliminar un rango a un jugador.
+command.floatingtext.description=Crear texto flotante en una ubicación.
+
+command.op.description=Otorgar o eliminar el estado de operador a un jugador.
+command.oplist.description=Lista de jugadores operadores.
+command.notify.description=Notificar cuando un jugador es marcado.
+command.notifylist.description=Lista de jugadores marcados.
+
+command.chatconfigset.description=Establecer el valor de una opción de configuración de chat de tipo entero.
+command.chatconfig.description=Activar o desactivar una opción de configuración de chat de tipo booleano.
+command.chatconfiglist.description=Ver opciones de configuración de chat disponibles.
+command.cmdtoggle.description=Alternar un comando.
+command.cmdtogglelist.description=Lista de comandos alternables.
+command.welcome.description=Establecer mensajes de bienvenida.
+command.chatdisplay.description=Cambiar el estilo de visualización del chat.
+command.chatdisplayset.description=Establecer un nuevo estilo de visualización del chat.
+
+command.general.category=§eComandos Generales
+command.tpa.category=§eComandos TPA
+command.home.category=§eComandos de Hogar
+command.gamemode.category=§eComandos de Modo de Juego
+command.moderation.category=§eComandos de Moderación
+command.operator.category=§eComandos de Operador
+command.modules.category=§eComandos de Módulos
+
+## Mojang Defaults - Welcome Messages
+disconnect.kicked= 
+disconnect.kicked.reason= 
+multiplayer.player.joined= 
+multiplayer.player.left= 
+multiplayer.player.joined.realms= 
+multiplayer.player.left.realms= 
+multiplayer.player.joined.renamed=%s (antes conocido como %s) se ha unido a la partida
+multiplayer.player.joined.realms.renamed=%s (antes conocido como %s) se ha unido al Reino
+multiplayer.player.changeToPersona= 
+multiplayer.player.changeToSkin= 
+
+bluemods.page.info=Estás en la Página: %1$s/%2$s | Usa §a!help <página> §7para ver otras categorías.
