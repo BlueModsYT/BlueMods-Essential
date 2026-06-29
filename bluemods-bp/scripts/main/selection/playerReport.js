@@ -192,7 +192,7 @@ export function ReportManagePanel(player, page = 0) {
 
         form.show(player).then((response) => {
             if (response.canceled) return;
-            showCompassUI(player);
+            showModerationUI(player);
         });
         return;
     }

@@ -14,14 +14,20 @@ import main from "../../config.js";
 
 const LOGS_DYNAMIC_PROPERTY = "bluemods:player_logs";
 const COMMAND_LOGS_DYNAMIC_PROPERTY = "bluemods:command_logs";
+const MAX_LOGS = 30;
 
-function getLogs() {
+export function addLog(playerName, action, details = "") {
     try {
         const logsJson = world.getDynamicProperty(LOGS_DYNAMIC_PROPERTY);
-        return logsJson ? JSON.parse(logsJson) : [];
-    } catch {
-        return [];
-    }
+        const logs = logsJson ? JSON.parse(logsJson) : [];
+        logs.unshift({ player: playerName, action: action, details: details, timestamp: Date.now(), date: new Date().toLocaleString() });
+        if (logs.length > MAX_LOGS) logs.length = MAX_LOGS;
+        world.setDynamicProperty(LOGS_DYNAMIC_PROPERTY, JSON.stringify(logs));
+    } catch (error) {}
+}
+
+function getLogs() {
+    try { const logsJson = world.getDynamicProperty(LOGS_DYNAMIC_PROPERTY); return logsJson ? JSON.parse(logsJson) : []; } catch { return []; }
 }
 
 function getCommandLogs() {
@@ -229,6 +235,7 @@ function getLogIcon(action) {
         case "Lored Item": return "textures/items/name_tag";
         case "Entity Spawn": return "textures/items/spawn_egg";
         case "Dupe Bundle": return "textures/items/bundle";
+        case "Bundle Inventory": return "textures/items/bundle";
         case "Dupe Bundle Crafter": return "textures/items/bundle";
         case "X-ray Detector": return "textures/items/diamond";
         case "CPS/Clicks Detector": return "textures/items/blaze_powder";
@@ -238,12 +245,27 @@ function getLogIcon(action) {
     }
 }
 
-export function clearLogs(player) {
+function clearLogs(player) {
     world.setDynamicProperty(LOGS_DYNAMIC_PROPERTY, JSON.stringify([]));
-    player.sendMessage("§7[§a+§7] §aPlayer logs cleared.");
+    player.sendMessage("§7[§a+§7] §aAll player logs have been cleared.");
 }
 
 export function clearCommandLogs(player) {
     world.setDynamicProperty(COMMAND_LOGS_DYNAMIC_PROPERTY, JSON.stringify([]));
-    player.sendMessage("§7[§a+§7] §aCommand logs cleared.");
+    player.sendMessage("§7[§a+§7] §aAll Command logs have been cleared.");
 }
+
+system.afterEvents.scriptEventReceive.subscribe((event) => {
+    if (event.id === "bluemods:clearlogs") {
+        const player = event.sourceEntity;
+        if (player && player.typeId === "minecraft:player") {
+            clearLogs(player);
+        }
+    }
+    if (event.id === "bluemods:clearcommandlogs") {
+        const player = event.sourceEntity;
+        if (player && player.typeId === "minecraft:player") {
+            clearCommandLogs(player);
+        }
+    }
+});

@@ -1,4 +1,5 @@
-import { Player, world } from "@minecraft/server";
+import { world } from "@minecraft/server";
+import { isProjectiles } from "../../items.js";
 
 //░███░░██░░██░░█░████░██░░██░░████░░████░░░███░
 //░█░░█░█░░░░█░░█░█░░░░██░░██░█░░░█░░█░░░█░█░░█░
@@ -12,23 +13,14 @@ world.afterEvents.projectileHitEntity.subscribe((data) => {
     const entityHit = data.getEntityHit()?.entity;
     const source = data.source;
     
-    if (source?.getGameMode() === "creative") return;
-    if (entityHit?.getGameMode() === "creative") return;
+    if (!(entityHit?.typeId === "minecraft:player" && source?.typeId === "minecraft:player")) return;
     
-    if (entityHit instanceof Player && source instanceof Player) {
-        const projectile = data.projectile.typeId;
-        
-        const allowedProjectiles = [
-            "minecraft:arrow",
-            "minecraft:snowball",
-            "minecraft:egg",
-            "minecraft:thrown_trident",
-            "minecraft:ender_pearl",
-            "minecraft:splash_potion"
-        ];
-        
-        if (allowedProjectiles.includes(projectile)) {
-            source.playSound("random.orb", { pitch: 0.5, volume: 0.4 });
-        }
+    if (source.getGameMode() === "creative") return;
+    if (entityHit.getGameMode() === "creative") return;
+    
+    const projectile = data.projectile.typeId;
+    
+    if (isProjectiles.includes(projectile)) {
+        system.run(() => source.runCommand('playsound random.orb @s'));
     }
 });

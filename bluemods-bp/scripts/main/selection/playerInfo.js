@@ -1,4 +1,5 @@
-import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
+import { world, system } from "@minecraft/server";
+import { ActionFormData } from "@minecraft/server-ui";
 import { showCompassUI } from "../playerCompass.js";
 import { customFormUICodes } from "../../handler/customFormUICodes.js";
 import main from "../../config.js";
@@ -27,23 +28,36 @@ const user = {
         ]
     },
     crafter: {
-        name: "8crafter",
-        description: "BlueMods Contributor",
-        social: []
+        name: "8Crafter",
+        description: "BlueMods Contributor & UI Designer",
+        social: [
+        ]
+    },
+    mehmet: {
+        name: "Mehmet303j",
+        description: "Friend of the Creator & Contributor",
+        social: [
+            "dsc.gg/lekoji-bedrock"
+        ]
     }
 };
 
 export function showInfoUI(player) {
     const blueshadowSocials = user.blueshadow.social.map(link => `§e- §f${link}`).join("\n");
-    const crafterSocials = user.crafter.social.length > 0 
-        ? "\n" + user.crafter.social.map(link => `§e- §f${link}`).join("\n") 
+    const crafterSocials = user.crafter.social.length > 0 ? "\n" + user.crafter.social.map(link => `§e- §f${link}`).join("\n") : "";
+    const mehmetSocials = user.mehmet.social.length > 0 ? "\n" + user.mehmet.social.map(link => `§e- §f${link}`).join("\n") : "";
+
+    const betaTesters = main.beta || [];
+    const betaList = betaTesters.length > 0
+        ? "\n\n\n§l§eBeta Testers:§r\n" + betaTesters.map(name => `§e- §f${name}`).join("\n")
         : "";
 
     const form = new ActionFormData()
         .title(customFormUICodes.action.titles.formStyles.gridMenu + "§l§bBlueMods §7| §aAddon §gInfo")
         .body(
             `§b${user.blueshadow.name} §7- §f${user.blueshadow.description}\n${blueshadowSocials}\n\n` +
-            `§b${user.crafter.name} §7- §f${user.crafter.description}${crafterSocials}`
+            `§b${user.crafter.name} §7- §f${user.crafter.description}${crafterSocials}\n\n` +
+            `§b${user.mehmet.name} §7- §f${user.mehmet.description}${mehmetSocials}${betaList}`
         );
     
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
@@ -54,7 +68,7 @@ export function showInfoUI(player) {
         switch (response.selection) {
             case 0:
                 showCompassUI(player);
-                player.playSound("note.pling", { pitch: 1, volume: 0.4 });
+                system.run(() => player.runCommand('playsound note.pling @s'));
                 break;
         }
     }).catch((error) => {
