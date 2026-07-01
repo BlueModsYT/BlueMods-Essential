@@ -1,6 +1,7 @@
-import { world, system } from "@minecraft/server";
+import { world, system, EquipmentSlot, Player, ItemStack } from "@minecraft/server";
+import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { Command } from "../handler/CommandHandler.js";
-import { addLog } from "../main/moderation/playerModules.js";
+import { addLog } from "../main/moderation/playerLogs.js";
 import main from "../config.js";
 
 //░███░░██░░██░░█░████░██░░██░░████░░████░░░███░
@@ -10,19 +11,6 @@ import main from "../config.js";
 //░█░░█░█░░█░█░░█░█░░█░█░██░█░█░░░█░░█░░░█░█░░█░
 //░███░░████░███░░████░█░█░░█░░███░░░████░░███░░
 // https://dsc.gg/bluemods
-
-function isCommandEnabled(commandName) {
-    return main.enabledCommands[commandName] !== undefined ? main.enabledCommands[commandName] : true;
-}
-
-const isAuthorized = (player, commandName) => {
-    if (!isCommandEnabled(commandName)) {
-        player.sendMessage(`§7[§b#§7] §cThis command §e${commandName} §cis currently disabled.`);
-        system.run(() => player.runCommand(`playsound random.break @s`));
-        return false;
-    }
-    return true;
-};
 
 //
 // Ban Command
@@ -130,7 +118,6 @@ function unbanPlayer(targetName, moderator) {
     return true;
 }
 
-// Auto-expire bans
 system.runInterval(() => {
     const database = getBanDatabase();
     let updated = false;
@@ -182,7 +169,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const { player } = data;
-    if (!isAuthorized(player, "ban")) return;
     
     const action = args[0]?.toLowerCase();
     const durationOrTarget = args[1];
@@ -269,7 +255,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const { player } = data;
-    if (!isAuthorized(player, "banitem")) return;
     
     const action = args[0]?.toLowerCase();
     const itemName = args[1]?.toLowerCase();
@@ -369,7 +354,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data) => {
     const player = data.player;
-    if (!isAuthorized(player, "clearchat")) return;
     
     
     player.sendMessage(`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n`);
@@ -387,7 +371,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const player = data.player
-    if (!isAuthorized(player, "cmdsf")) return;
     
     const enable = "enable", disable = "disable";
     
@@ -428,7 +411,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, async (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "ecwipe")) return;
     
     if (!args[0]) {
         player.sendMessage(`§7[§b#§7] §aTry to mention a player to remove there ender_chest. §3!ecwipe ${main.playerl}`);
@@ -481,10 +463,9 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "ecsee")) return;
     
     if (args.length < 1) {
-        player.sendMessage(`§7[§b#§7] §cInvalid action! §aUse this Method§7: §3!ecsee ${main.player}`);
+        player.sendMessage(`§7[§b#§7] §cUse: §3!ecsee <player>`);
         system.run(() => player.runCommand('playsound random.break @s'));
         return;
     }
@@ -493,34 +474,63 @@ Command.register({
     const targetPlayer = world.getPlayers().find(p => p.name === targetPlayerName);
 
     if (!targetPlayer) {
-        player.sendMessage(`§7[§b#§7] §cPlayer not found on the server`);
+        player.sendMessage(`§7[§b#§7] §cPlayer not found.`);
         system.run(() => player.runCommand('playsound random.break @s'));
         return;
     }
 
-    const enderChest = targetPlayer.getComponent("minecraft:ender_chest_inventory")?.container;
+    const enderChest = targetPlayer.getComponent("minecraft:ender_inventory")?.container;
     
     if (!enderChest) {
-        player.sendMessage(`§7[§b#§7] §cUnable to access ender chest`);
+        player.sendMessage(`§7[§b#§7] §cUnable to access ender chest.`);
         return;
     }
 
-    let items = [];
-    for (let i = 0; i < enderChest.size; i++) {
-        let item = enderChest.getItem(i);
-        if (item) {
-            items.push(`§7[§a${i + 1}§7] "§e${item.typeId.replace("minecraft:", "")}§7" x§f${item.amount}`);
+    const chestX = Math.floor(player.location.x);
+    const chestY = Math.floor(player.location.y) + 2;
+    const chestZ = Math.floor(player.location.z);
+    
+    system.run(() => {
+        player.runCommand(`setblock ${chestX} ${chestY} ${chestZ} shulker_box`);
+    });
+    
+    system.runTimeout(() => {
+        try {
+            const shulkerBlock = player.dimension.getBlock({ x: chestX, y: chestY, z: chestZ });
+            
+            if (!shulkerBlock) {
+                player.sendMessage(`§7[§b#§7] §cBlock not found at location.`);
+                return;
+            }
+            
+            const shulkerContainer = shulkerBlock.getComponent("minecraft:inventory")?.container;
+            if (!shulkerContainer) {
+                system.run(() => player.runCommand(`setblock ${chestX} ${chestY} ${chestZ} air`));
+                return;
+            }
+            
+            for (let i = 0; i < enderChest.size; i++) {
+                const item = enderChest.getItem(i);
+                if (item) {
+                    shulkerContainer.setItem(i, item);
+                }
+            }
+            
+            system.runTimeout(() => {
+                system.run(() => {
+                    player.runCommand(`setblock ${chestX} ${chestY} ${chestZ} air destroy`);
+                });
+                player.sendMessage(`§7[§b#§7] §e${targetPlayerName}'s §aender chest has been sent to you.`);
+            }, 5);
+            
+        } catch (error) {
+            player.sendMessage(`§7[§b#§7] §cError: ${error.message}`);
+            system.run(() => player.runCommand(`setblock ${chestX} ${chestY} ${chestZ} air`));
         }
-    }
-
-    if (items.length > 0) {
-        player.sendMessage(`§7[§b#§7] §e${targetPlayerName}'s §7Ender Chest §7(${items.length} items):\n${items.join("\n")}`);
-    } else {
-        player.sendMessage(`§7[§b#§7] §e${targetPlayerName}'s §7ender chest is empty.`);
-    }
+    }, 5);
 
     world.getPlayers({ tags: ["notify"] }).forEach(admin => {
-        admin.sendMessage(`§7[§e#§7] §e${player.name} §ais using §3!ecsee §aon §e${targetPlayer.name}`);
+        admin.sendMessage(`§7[§e#§7] §e${player.name} §aused §3!ecsee §aon §e${targetPlayer.name}`);
         system.run(() => admin.runCommand(`playsound note.pling @s`));
     });
 });
@@ -536,7 +546,6 @@ Command.register({
   permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
   const player = data.player;
-    if (!isAuthorized(player, "give")) return;
     
 
   if (args.length < 2) {
@@ -560,52 +569,55 @@ Command.register({
 // Inventory See Command
 //
 
+function getInventoryItems(player) {
+    let inv = player.getComponent("inventory").container;
+    let items = Array.from({ length: inv.size }, (_, i) => inv.getItem(i) || { typeId: "air" });
+    return player instanceof Player ? items.slice(9).concat(items.slice(0, 9)) : items;
+}
+
+function getArmorItems(player) {
+    let equip = player.getComponent("equippable");
+    return [equip.getEquipment(EquipmentSlot.Head), equip.getEquipment(EquipmentSlot.Chest), equip.getEquipment(EquipmentSlot.Legs), equip.getEquipment(EquipmentSlot.Feet), equip.getEquipment(EquipmentSlot.Offhand)];
+}
+
+function openInventoryUI(target, viewer) {
+    viewer.runCommand("ride @s stop_riding");
+    
+    let items = getInventoryItems(target);
+    let armor = getArmorItems(target);
+    let entity = viewer.dimension.spawnEntity("bluemods:inventory", viewer.location);
+    let container = entity.getComponent("inventory").container;
+    
+    entity.nameTag = `_blue:inventory:${target.name}`;
+    
+    for (let i = 0; i < 36; i++) {
+        if (items[i]?.typeId !== "air") container.setItem(i, items[i]);
+    }
+    
+    for (let i = 45; i < 53; i++) {
+        if (armor[i - 45]?.typeId !== "air") container.setItem(i, armor[i - 45]);
+    }
+    
+    viewer.runCommand("ride @s start_riding @e[type=bluemods:inventory,c=1] teleport_ride");
+    entity.addTag("invsee");
+}
+
 Command.register({
     name: "invsee",
-    description: "",
+    description: "View a player's inventory live",
     aliases: [],
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "invsee")) return;
+   
+    let target = world.getPlayers().find(p => p.name === args[0]);
+    if (!target) { 
+        player.sendMessage("§7[§b#§7] §cPlayer not found."); 
+        return; 
+    }
     
-    if (args.length < 1) {
-        player.sendMessage(`§7[§b#§7] §cInvalid action! §aUse this Method§7: §3!invsee ${main.player}`);
-        system.run(() => player.runCommand('playsound random.break @s'));
-        return;
-    }
-
-    const targetPlayerName = args[0];
-    const targetPlayer = world.getPlayers().find(p => p.name === targetPlayerName);
-
-    if (targetPlayer) {
-        const inventory = targetPlayer.getComponent("minecraft:inventory").container;
-        let items = [];
-
-        for (let i = 0; i < inventory.size; i++) {
-            let item = inventory.getItem(i);
-            if (item) {
-                items.push(`§7[§a${i + 1}§7] "§e${item.typeId}§7" "§f${item.amount}§7"`);
-            }
-        }
-
-        if (items.length > 0) {
-            player.sendMessage(`§7[§b#§7] §e${targetPlayerName} §7Inventory:\n${items.join("\n")}`);
-            // Notification for Admins
-            world.getPlayers({ tags: ["notify"] }).forEach(admin => {
-                admin.sendMessage(`§7[§e#§7] §e${player.name} §ais using §3!invsee §ato §e${targetPlayer.name}`);
-                system.run(() => admin.runCommand(`playsound note.pling @s`));
-            });
-        } else {
-            player.sendMessage(`§7[§b#§7] §cLooks like this user §e${targetPlayerName} §chas an empty inventory.`);
-            system.run(() => player.runCommand('playsound random.break @s'));
-            return;
-        }
-    } else {
-        player.sendMessage(`§7[§b#§7] §aPlayer name must be someone currently on the server`);
-        system.run(() => player.runCommand('playsound random.break @s'));
-        return;
-    }
+    system.run(() => openInventoryUI(target, player));
+    system.run(() => player.sendMessage("§7[§a+§7] §fPress E or Click your Inventory Button to see the user's Inventory\n§eNote:§f You cannot change, move, or add any items on the player."));
 });
 
 //
@@ -619,7 +631,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "invwipe")) return;
     
 
     if (args.length < 1) {
@@ -656,7 +667,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "kick")) return;
     
 
     if (args.length < 2) {
@@ -713,7 +723,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const { player } = data;
-    if (!isAuthorized(player, "lagclear")) return;
     
     const action = args[0]?.toLowerCase();
     
@@ -865,7 +874,6 @@ Command.register({
     permission: (player) => (player.hasTag(main.adminTag))
 }, async (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "notify")) return;
     
     const action = args[0]?.toLowerCase();
     const targetName = args[1] || player.name;
@@ -925,7 +933,6 @@ Command.register({
     permission: (player) => (player.hasTag(main.adminTag))
 }, async (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "op")) return;
     
     const action = args[0]?.toLowerCase(); // First argument: add, remove, or list
     const targetName = args[1] || player.name; // Second argument: target player's name, default to the command executor
@@ -978,6 +985,7 @@ Command.register({
 // Golden Apple Command
 //
 
+
 system.runInterval(() => {
     const currentTick = system.currentTick;
 
@@ -998,19 +1006,17 @@ world.beforeEvents.itemUse.subscribe((event) => {
     const { itemStack } = event;
     const playerName = player.name;
     const currentTick = system.currentTick;
-    
-    if (!isAuthorized(player, "gapple")) return;
 
-    // Ender Pearl
     if (itemStack.typeId === "minecraft:ender_pearl") {
+        if (!isCommandEnabled("pearl")) return;
         handleCooldown(player, event, "pearl", main.pearlCooldown, "Ender Pearl");
     }
-    // Golden Apple
     else if (itemStack.typeId === "minecraft:golden_apple") {
+        if (!isCommandEnabled("gapple")) return;
         handleCooldown(player, event, "golden_apple", main.goldenAppleCooldown, "Golden Apple");
     }
-    // Enchanted Golden Apple
     else if (itemStack.typeId === "minecraft:enchanted_golden_apple" || itemStack.typeId === "minecraft:golden_apple_enchanted") {
+        if (!isCommandEnabled("gapple")) return;
         handleCooldown(player, event, "enchanted_apple", main.enchantedAppleCooldown, "Enchanted Golden Apple");
     }
 });
@@ -1047,7 +1053,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const { player } = data;
-    if (!isAuthorized(player, "gapple")) return;
     
     const type = args[0]?.toLowerCase();
     const action = args[1]?.toLowerCase();
@@ -1091,7 +1096,6 @@ Command.register({
     
     system.run(() => player.runCommand('playsound random.levelup @s'));
 });
-
 
 //
 // Pearl Command
@@ -1143,7 +1147,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const { player } = data;
-    if (!isAuthorized(player, "rank")) return;
 
     if (args.length < 3 || args.length > 4) {
         player.sendMessage(`§7[§b#§7] §cInvalid action! §aUse this Method§7: §3!rank ${main.addremove} §7<§arank§7> §7[§gcolor(optional)§7] ${main.player}`);
@@ -1210,7 +1213,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const { player } = data;
-    if (!isAuthorized(player, "troll")) return;
     
     const { id, name } = player;
     const trollTypes = ["creeper", "endermen", "ghast", "zombie", "skeleton"];
@@ -1280,7 +1282,6 @@ Command.register({
     permission: (player) => (player.hasTag(main.adminTag) || player.isOp())
 }, async (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "trusted")) return;
     
     const action = args[0]?.toLowerCase();
     const targetName = args[1] || player.name;
@@ -1345,7 +1346,7 @@ const defaultCustomLeaveMessage = `§bBlueMods §7>> §e{name} §chas left the s
 
 let welcomeMessage = defaultCustomJoinMessage;
 let leaveMessage = defaultCustomLeaveMessage;
-let welcomeEnabled = false; // Default is disabled (shows simple messages)
+let welcomeEnabled = false;
 let leaveEnabled = false;
 
 system.run(() => {
@@ -1380,11 +1381,9 @@ world.afterEvents.playerJoin.subscribe((event) => {
     const { playerName } = event;
 
     if (welcomeEnabled) {
-        // Custom BlueMods message
         const formattedMessage = welcomeMessage.replace("{name}", playerName);
         world.sendMessage(formattedMessage);
     } else {
-        // Default simple message
         const formattedMessage = defaultSimpleJoinMessage.replace("{name}", playerName);
         world.sendMessage(formattedMessage);
     }
@@ -1394,11 +1393,9 @@ world.afterEvents.playerLeave.subscribe((event) => {
     const { playerName } = event;
 
     if (leaveEnabled) {
-        // Custom BlueMods message
         const formattedMessage = leaveMessage.replace("{name}", playerName);
         world.sendMessage(formattedMessage);
     } else {
-        // Default simple message
         const formattedMessage = defaultSimpleLeaveMessage.replace("{name}", playerName);
         world.sendMessage(formattedMessage);
     }
@@ -1411,7 +1408,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const { player } = data;
-    if (!isAuthorized(player, "welcome")) return;
 
     const action = args[0]?.toLowerCase();
     const type = args[1]?.toLowerCase();
@@ -1556,7 +1552,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "floatingtext")) return;
 
     const fullArgs = data.message.split(" ");
     if (fullArgs.length < 2) {

@@ -18,7 +18,7 @@ export const isBundles = [
     "minecraft:black_bundle"
 ];
 
-export const playerProjectiles = [
+export const isProjectiles = [
     "minecraft:arrow",
     "minecraft:snowball",
     "minecraft:egg",
@@ -261,6 +261,7 @@ export const isLored = [
 ];
 
 export const isEnchant = [
+    // --- Weapons & Tools ---
     "minecraft:wooden_sword",
     "minecraft:stone_sword",
     "minecraft:iron_sword",
@@ -296,12 +297,19 @@ export const isEnchant = [
     "minecraft:flint_and_steel",
     "minecraft:carrot_on_a_stick",
     "minecraft:warped_fungus_on_a_stick",
+    "minecraft:brush",
+    "minecraft:spyglass",
+    "minecraft:recovery_compass",
+    "minecraft:goat_horn",
+
+    // --- Armor & Elytra ---
     "minecraft:leather_helmet",
     "minecraft:chainmail_helmet",
     "minecraft:iron_helmet",
     "minecraft:golden_helmet",
     "minecraft:diamond_helmet",
     "minecraft:netherite_helmet",
+    "minecraft:turtle_helmet",
     "minecraft:leather_chestplate",
     "minecraft:chainmail_chestplate",
     "minecraft:iron_chestplate",
@@ -321,11 +329,153 @@ export const isEnchant = [
     "minecraft:diamond_boots",
     "minecraft:netherite_boots",
     "minecraft:elytra",
+    "minecraft:wolf_armor",
+    
+    // --- Horse Gear ---
+    "minecraft:saddle",
+    "minecraft:leather_horse_armor",
+    "minecraft:iron_horse_armor",
+    "minecraft:golden_horse_armor",
+    "minecraft:diamond_horse_armor",
+    "minecraft:netherite_horse_armor",
+
+    // --- Ranged / Combat Support ---
     "minecraft:bow",
     "minecraft:crossbow",
     "minecraft:shield",
+    "minecraft:trident",
+    "minecraft:totem_of_undying",
+    
+    // --- All Shulkers ---
+    "minecraft:colored_shulker_box",
+    "minecraft:shulker_box",
+    "minecraft:undyed_shulker_box",
+    "minecraft:black_shulker_box",
+    "minecraft:blue_shulker_box",
+    "minecraft:brown_shulker_box",
+    "minecraft:cyan_shulker_box",
+    "minecraft:gray_shulker_box",
+    "minecraft:green_shulker_box",
+    "minecraft:light_blue_shulker_box",
+    "minecraft:light_gray_shulker_box",
+    "minecraft:lime_shulker_box",
+    "minecraft:magenta_shulker_box",
+    "minecraft:orange_shulker_box",
+    "minecraft:pink_shulker_box",
+    "minecraft:purple_shulker_box",
+    "minecraft:red_shulker_box",
+    "minecraft:yellow_shulker_box",
+    "minecraft:white_shulker_box",
+    
+    // --- All Bundles ---
+    "minecraft:bundle",
+    "minecraft:white_bundle",
+    "minecraft:orange_bundle",
+    "minecraft:magenta_bundle",
+    "minecraft:light_blue_bundle",
+    "minecraft:yellow_bundle",
+    "minecraft:lime_bundle",
+    "minecraft:pink_bundle",
+    "minecraft:gray_bundle",
+    "minecraft:light_gray_bundle",
+    "minecraft:cyan_bundle",
+    "minecraft:purple_bundle",
+    "minecraft:blue_bundle",
+    "minecraft:brown_bundle",
+    "minecraft:green_bundle",
+    "minecraft:red_bundle",
+    "minecraft:black_bundle",
+    
+    // --- Utility Items ---
+    "minecraft:lead",
+    "minecraft:name_tag",
     "minecraft:book",
-    "minecraft:trident"
+    "minecraft:enchanted_book",
+    "minecraft:writable_book",
+    "minecraft:written_book",
+
+    // --- Buckets (All types) ---
+    "minecraft:bucket",
+    "minecraft:water_bucket",
+    "minecraft:lava_bucket",
+    "minecraft:milk_bucket",
+    "minecraft:axolotl_bucket",
+    "minecraft:cod_bucket",
+    "minecraft:salmon_bucket",
+    "minecraft:pufferfish_bucket",
+    "minecraft:tropical_fish_bucket",
+    "minecraft:tadpole_bucket",
+    "minecraft:powder_snow_bucket",
+
+    // --- Potions ---
+    "minecraft:potion",
+    "minecraft:splash_potion",
+    "minecraft:lingering_potion",
+
+    // --- Signs (All types) ---
+    "minecraft:oak_sign", "minecraft:spruce_sign", "minecraft:birch_sign", "minecraft:jungle_sign",
+    "minecraft:acacia_sign", "minecraft:dark_oak_sign", "minecraft:mangrove_sign", "minecraft:cherry_sign",
+    "minecraft:bamboo_sign", "minecraft:crimson_sign", "minecraft:warped_sign",
+    "minecraft:oak_hanging_sign", "minecraft:spruce_hanging_sign", "minecraft:birch_hanging_sign",
+    "minecraft:jungle_hanging_sign", "minecraft:acacia_hanging_sign", "minecraft:dark_oak_hanging_sign",
+    "minecraft:mangrove_hanging_sign", "minecraft:cherry_hanging_sign", "minecraft:bamboo_hanging_sign",
+    "minecraft:crimson_hanging_sign", "minecraft:warped_hanging_sign",
+
+    // --- Banners (All colors) ---
+    "minecraft:white_banner", "minecraft:orange_banner", "minecraft:magenta_banner", "minecraft:light_blue_banner",
+    "minecraft:yellow_banner", "minecraft:lime_banner", "minecraft:pink_banner", "minecraft:gray_banner",
+    "minecraft:light_gray_banner", "minecraft:cyan_banner", "minecraft:purple_banner", "minecraft:blue_banner",
+    "minecraft:brown_banner", "minecraft:green_banner", "minecraft:red_banner", "minecraft:black_banner",
+
+    // --- Boats & Rafts (All types) ---
+    "minecraft:oak_boat", "minecraft:spruce_boat", "minecraft:birch_boat", "minecraft:jungle_boat",
+    "minecraft:acacia_boat", "minecraft:dark_oak_boat", "minecraft:mangrove_boat", "minecraft:cherry_boat",
+    "minecraft:bamboo_raft", "minecraft:oak_chest_boat", "minecraft:spruce_chest_boat", "minecraft:birch_chest_boat",
+    "minecraft:jungle_chest_boat", "minecraft:acacia_chest_boat", "minecraft:dark_oak_chest_boat",
+    "minecraft:mangrove_chest_boat", "minecraft:cherry_chest_boat", "minecraft:bamboo_chest_raft",
+
+    // --- Minecarts ---
+    "minecraft:minecart",
+    "minecraft:chest_minecart",
+    "minecraft:furnace_minecart",
+    "minecraft:hopper_minecart",
+    "minecraft:tnt_minecart",
+    "minecraft:command_block_minecart",
+
+    // --- Music Discs ---
+    "minecraft:music_disc_13", "minecraft:music_disc_cat", "minecraft:music_disc_blocks",
+    "minecraft:music_disc_chirp", "minecraft:music_disc_far", "minecraft:music_disc_mall",
+    "minecraft:music_disc_mellohi", "minecraft:music_disc_stal", "minecraft:music_disc_strad",
+    "minecraft:music_disc_ward", "minecraft:music_disc_11", "minecraft:music_disc_wait",
+    "minecraft:music_disc_otherside", "minecraft:music_disc_relic", "minecraft:music_disc_5",
+    "minecraft:music_disc_creator", "minecraft:music_disc_creator_music_box", "minecraft:music_disc_precipice",
+
+    // --- Spawn Eggs (All vanilla mobs) ---
+    "minecraft:bat_spawn_egg", "minecraft:bee_spawn_egg", "minecraft:blaze_spawn_egg",
+    "minecraft:camel_spawn_egg", "minecraft:cat_spawn_egg", "minecraft:cave_spider_spawn_egg",
+    "minecraft:chicken_spawn_egg", "minecraft:cod_spawn_egg", "minecraft:cow_spawn_egg",
+    "minecraft:creeper_spawn_egg", "minecraft:dolphin_spawn_egg", "minecraft:donkey_spawn_egg",
+    "minecraft:drowned_spawn_egg", "minecraft:elder_guardian_spawn_egg", "minecraft:ender_dragon_spawn_egg",
+    "minecraft:enderman_spawn_egg", "minecraft:endermite_spawn_egg", "minecraft:evoker_spawn_egg",
+    "minecraft:fox_spawn_egg", "minecraft:frog_spawn_egg", "minecraft:ghast_spawn_egg",
+    "minecraft:glow_squid_spawn_egg", "minecraft:goat_spawn_egg", "minecraft:guardian_spawn_egg",
+    "minecraft:hoglin_spawn_egg", "minecraft:horse_spawn_egg", "minecraft:husk_spawn_egg",
+    "minecraft:iron_golem_spawn_egg", "minecraft:llama_spawn_egg", "minecraft:magma_cube_spawn_egg",
+    "minecraft:mooshroom_spawn_egg", "minecraft:mule_spawn_egg", "minecraft:ocelot_spawn_egg",
+    "minecraft:panda_spawn_egg", "minecraft:parrot_spawn_egg", "minecraft:phantom_spawn_egg",
+    "minecraft:pig_spawn_egg", "minecraft:piglin_spawn_egg", "minecraft:piglin_brute_spawn_egg",
+    "minecraft:pillager_spawn_egg", "minecraft:polar_bear_spawn_egg", "minecraft:pufferfish_spawn_egg",
+    "minecraft:rabbit_spawn_egg", "minecraft:ravager_spawn_egg", "minecraft:salmon_spawn_egg",
+    "minecraft:sheep_spawn_egg", "minecraft:shulker_spawn_egg", "minecraft:silverfish_spawn_egg",
+    "minecraft:skeleton_spawn_egg", "minecraft:skeleton_horse_spawn_egg", "minecraft:slime_spawn_egg",
+    "minecraft:sniffer_spawn_egg", "minecraft:snow_golem_spawn_egg", "minecraft:spider_spawn_egg",
+    "minecraft:squid_spawn_egg", "minecraft:stray_spawn_egg", "minecraft:strider_spawn_egg",
+    "minecraft:tadpole_spawn_egg", "minecraft:trader_llama_spawn_egg", "minecraft:tropical_fish_spawn_egg",
+    "minecraft:turtle_spawn_egg", "minecraft:vex_spawn_egg", "minecraft:villager_spawn_egg",
+    "minecraft:vindicator_spawn_egg", "minecraft:wandering_trader_spawn_egg", "minecraft:warden_spawn_egg",
+    "minecraft:witch_spawn_egg", "minecraft:wither_skeleton_spawn_egg", "minecraft:wolf_spawn_egg",
+    "minecraft:zoglin_spawn_egg", "minecraft:zombie_spawn_egg", "minecraft:zombie_horse_spawn_egg",
+    "minecraft:zombie_villager_spawn_egg", "minecraft:zombified_piglin_spawn_egg"
 ];
 
 export const isContainers = [
@@ -347,14 +497,32 @@ export const isContainers = [
     "minecraft:dispenser",
     "minecraft:dropper",
     "minecraft:furnace",
+    "minecraft:anvil",
     "minecraft:blast_furnace",
     "minecraft:smoker",
     "minecraft:hopper",
     "minecraft:barrel",
-    "minecraft:shulker_box",
+    "minecraft:crafter",
     "minecraft:ender_chest",
     "minecraft:colored_shulker_box",
-    "minecraft:crafter"
+    "minecraft:shulker_box",
+    "minecraft:undyed_shulker_box",
+    "minecraft:black_shulker_box",
+    "minecraft:blue_shulker_box",
+    "minecraft:brown_shulker_box",
+    "minecraft:cyan_shulker_box",
+    "minecraft:gray_shulker_box",
+    "minecraft:green_shulker_box",
+    "minecraft:light_blue_shulker_box",
+    "minecraft:light_gray_shulker_box",
+    "minecraft:lime_shulker_box",
+    "minecraft:magenta_shulker_box",
+    "minecraft:orange_shulker_box",
+    "minecraft:pink_shulker_box",
+    "minecraft:purple_shulker_box",
+    "minecraft:red_shulker_box",
+    "minecraft:yellow_shulker_box",
+    "minecraft:white_shulker_box"
 ];
 
 export const VAILD_BLOCK_TAGS = [

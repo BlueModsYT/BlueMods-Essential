@@ -1,4 +1,5 @@
-import { world } from "@minecraft/server";
+import { world, system } from "@minecraft/server";
+import { addCommandLog } from "../main/moderation/playerLogs.js";
 import main from "../config.js";
 
 //░███░░██░░██░░█░████░██░░██░░████░░████░░░███░
@@ -9,6 +10,31 @@ import main from "../config.js";
 //░███░░████░███░░████░█░█░░█░░███░░░████░░███░░
 // https://dsc.gg/bluemods
 
+function isAuthorized(player, commandName) {
+    if (main.enabledCommands[commandName] !== undefined) {
+        return main.enabledCommands[commandName];
+    }
+    return true;
+}
+
+function getCommandDescription(commandName) {
+    for (const category of main.memberCategories) {
+        for (const cmd of category.commands) {
+            if (cmd.text.includes(`!${commandName}`)) {
+                return cmd.description;
+            }
+        }
+    }
+    for (const category of main.adminCategories) {
+        for (const cmd of category.commands) {
+            if (cmd.text.includes(`!${commandName}`)) {
+                return cmd.description;
+            }
+        }
+    }
+    return "No description provided.";
+}
+
 class Commands {
     constructor() {
         this.registeredCommands = [];
@@ -17,7 +43,7 @@ class Commands {
     register(info, callback) {
         const command = {
             name: info.name.toLowerCase().split(' ')[0],
-            description: info.description ?? "No description provided.",
+            description: getCommandDescription(info.name.toLowerCase()),
             aliases: info.aliases?.map(aL => aL.toLowerCase().split(' ')[0]) ?? [],
             permission: info.permission ?? (() => true),
             callback
@@ -63,14 +89,24 @@ world.beforeEvents.chatSend.subscribe((data) => {
     const cmdData = Command.registeredCommands.find(c => c.name === cmd || c.aliases.includes(cmd));
 
     if (!cmdData) {
+        system.run(() => player.playSound("random.anvil_land", { pitch: 1, volume: 0.4 }));
         player.sendMessage(`§7[§c-§7] §cUnknown command: §g${message.replace(prefix, '')}§c. Please check that the command exists and that you have permission to use it.`);
         return;
     }
-
+    
+    if (!isAuthorized(player, cmdData.name)) {
+        system.run(() => player.playSound("random.anvil_land", { pitch: 1, volume: 0.4 }));
+        player.sendMessage(`§7[§c-§7] §cThis command is currently disabled. Please check that the command exists and that you have permission to use it.`);
+        return;
+    }
+    
     if (cmdData.permission && !cmdData.permission(player)) {
+        system.run(() => player.playSound("random.anvil_land", { pitch: 1, volume: 0.4 }));
         player.sendMessage(`§7[§c-§7] §cYou do not have permission to use this command.`);
         return;
     }
+
+    addCommandLog(player.name, cmdData.name, args.join(" "));
 
     cmdData.callback({ player, message }, args);
 });

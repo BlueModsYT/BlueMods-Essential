@@ -77,7 +77,7 @@ export function showCommandLogs(player, page = 0) {
         const form = new ActionFormData()
             .title(customFormUICodes.action.titles.formStyles.gridMenu + "§l§bBlueMods §7| §aCommand Logs")
             .body("§7No command logs available.")
-            .button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+            .button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
         
         form.show(player).then(response => {
             if (response.canceled) return;
@@ -100,12 +100,12 @@ export function showCommandLogs(player, page = 0) {
     });
     
     if (page > 0) {
-        form.button(customFormUICodes.action.buttons.positions.main_only + "§aPrevious Page", "textures/ui/arrow_left");
+        form.button(customFormUICodes.action.buttons.positions.left_side_only + "§aPrevious Page", "textures/ui/arrow_left");
     }
     if (page < totalPages - 1) {
-        form.button(customFormUICodes.action.buttons.positions.main_only + "§aNext Page", "textures/ui/arrow_right");
+        form.button(customFormUICodes.action.buttons.positions.left_side_only + "§aNext Page", "textures/ui/arrow_right");
     }
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
     
     form.show(player).then(response => {
         if (response.canceled) return;
@@ -137,7 +137,7 @@ function showCommandLogDetails(player, log, returnPage) {
             `§7Args: §e${log.args || "None"}\n\n` +
             `§7Date: §e${log.date}`
         )
-        .button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+        .button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
     
     form.show(player).then(response => {
         if (response.canceled) return;
@@ -157,7 +157,7 @@ export function showPlayerLogs(player, page = 0) {
         const form = new ActionFormData()
             .title(customFormUICodes.action.titles.formStyles.gridMenu + "§l§bBlueMods §7| §aPlayer Logs")
             .body("§7No logs available.")
-            .button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+            .button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
         
         form.show(player).then(response => {
             if (response.canceled) return;
@@ -180,12 +180,12 @@ export function showPlayerLogs(player, page = 0) {
     });
     
     if (page > 0) {
-        form.button(customFormUICodes.action.buttons.positions.main_only + "§aPrevious Page", "textures/ui/arrow_left");
+        form.button(customFormUICodes.action.buttons.positions.left_side_only + "§aPrevious Page", "textures/ui/arrow_left");
     }
     if (page < totalPages - 1) {
-        form.button(customFormUICodes.action.buttons.positions.main_only + "§aNext Page", "textures/ui/arrow_right");
+        form.button(customFormUICodes.action.buttons.positions.left_side_only + "§aNext Page", "textures/ui/arrow_right");
     }
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
     
     form.show(player).then(response => {
         if (response.canceled) return;
@@ -216,7 +216,7 @@ function showLogDetails(player, log, returnPage) {
             `§7Date: §e${log.date}\n\n` +
             `§7Timestamp: §e${log.timestamp}`
         )
-        .button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+        .button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
     
     form.show(player).then(response => {
         if (response.canceled) return;

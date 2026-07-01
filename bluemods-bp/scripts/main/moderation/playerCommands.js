@@ -31,7 +31,7 @@ export function CommandsPanel(player) {
     }
 
     const backButtonIndex = commandKeys.length;
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled || response.selection === backButtonIndex + 1) return;

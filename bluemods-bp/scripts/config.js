@@ -11,8 +11,8 @@ export const main = {
     adminTag: "admin",
     notifyTag: "notify",
     developer: "§b@bluemods.lol §7| §3https://dsc.gg/bluemods",
-    bmversion: "§gBeta-v1.0.0",
-    mcversion: "§g1.26.30 §7- §g1.26.31",
+    bmversion: "§gBeta-v1.0.5",
+    mcversion: "§g1.26.30 §7- §g1.26.32",
     bmdescription: "§3An all-in-one Minecraft Bedrock addon designed to provide essential for both Realms and dedicated servers.",
     player: "§7<§eplayer§7>",
     reason: "§7[§areason§7]",
@@ -28,17 +28,25 @@ export const main = {
     enchantedAppleCooldown: 5, // Default Cooldown 
     enchantedAppleMinCooldown: 3, // Limit
     teleportCooldown: 5, // Homes / Tpa / Rtp
-    creators: [
-        "BlueShadow",
-        "Trokkk",
-        "MP09",
-        "8Crafter",
-        "Mehmet303j"
-    ],
-    beta: [],
-    ranks: [
-        { name: "BlueModsYT", tag: "§bCreator", icon: "\uF109" }
-    ],
+    creators: [ "BlueShadow", "Trokkk", "MP09", "8Crafter", "Mehmet303j" ],
+    beta: [ "antoineflas0", "GorfisGorf", "Mehmet303j", "Andexter8", "Tro11Face4411", "BlueModsYT" ],
+    ranksIcon: { // These are ranks from font, don't change it unless you know unicodes
+        coal: "\uF120",
+        copper: "\uF121",
+        amethyst: "\uF122",
+        lapis: "\uF123",
+        iron: "\uF124",
+        gold: "\uF125",
+        redstone: "\uF126",
+        diamond: "\uF127",
+        netherite: "\uF128",
+        emerald: "\uF129",
+        enderite: "\uF12A",
+        discord: "\uF13A",
+        youtube: "\uF138",
+        twitch: "\uF13B"
+    },
+    creatorRanks: [ { name: "BlueModsYT", tag: "§9Creator§r", icon: "\uF109" }, { name: "Tro11Face4411", tag: "§0Former §9Dev.§r", icon: "\uF128" } ],
     colors: {
         black: "§0",
         dark_blue: "§1",
@@ -66,13 +74,13 @@ export const main = {
     enabledCommands: {
         // General Commands
         "help": true,
-        // "about": true, - not disabled
         "home": false,
         "ping": true,
         "rtp": false,
         "tpa": true,
         "echest": false,
         "compass": false,
+        "auctionhouse": false,
         "back": false,
         // Gamemodes
         "gma": true,
@@ -108,8 +116,8 @@ export const main = {
         "receiveCompassOnJoin": false,
         "removeDupeBundles": true,
         "removeDupeCrafter": true,
+        "removeBundlesInventory": true,
         "removeDupeStackedInventory": true,
-        "antiSpamClicks": false,
         "inCombatLogging": false,
         "enchantmentCheck": false,
         "loredItemCheck": true,
@@ -132,7 +140,8 @@ export const main = {
                 { text: `  §7- §a!help §7- §3`, description: "command.help.description" },
                 { text: `  §7- §a!ping §7- §3`, description: "command.ping.description" },
                 { text: `  §7- §a!about §7- §3`, description: "command.about.description" },
-                { text: `  §7- §a!warp §7- §3`, description: "command.warp.description" }
+                { text: `  §7- §a!warp §7- §3`, description: "command.warp.description" },
+                { text: `  §7- §e!coordtoggle §7<§aenable§7/§cdisable§7> §7- §3`, description: "command.coordtoggle.description" }
             ]
         },
         {
@@ -164,7 +173,8 @@ export const main = {
                 { text: `  §7- §a!ping §7- §3`, description: "command.ping.description" },
                 { text: `  §7- §a!about §7- §3`, description: "command.about.description" },
                 { text: `  §7- §a!spawn §7- §3`, description: "command.spawn.description" },
-                { text: `  §7- §a!warp §7- §3`, description: "command.warp.description" }
+                { text: `  §7- §a!warp §7- §3`, description: "command.warp.description" },
+                { text: `  §7- §e!coordtoggle §7<§aenable§7/§cdisable§7> §7- §3`, description: "command.coordtoggle.description" }
             ]
         },
         {
@@ -206,8 +216,8 @@ export const main = {
                 { text: `  §7- §a!ban §cremove §7<§eplayer§7> §7- §3`, description: "command.kick.description" },
                 { text: `  §7- §a!kick §7<§eplayer§7> §7[§areason§7] §7- §3`, description: "command.kick.description" },
                 { text: `  §7- §a!cmdsf §7<§aenable§7/§cdisable§7> §7- §3`, description: "command.cmdsf.description" },
-                { text: `  §7- §a!mute §7<§aadd§7/§cremove§7> §7<§eplayer§7> §7- §3`, description: "command.mute.description" },
-                { text: `  §7- §a!mute list §7- §3`, description: "command.mutelist.description" },
+                { text: `  §7- §e!mute §7<§aadd§7/§cremove§7> §7<§eplayer§7> §7- §3`, description: "command.mute.description" },
+                { text: `  §7- §e!mute list §7- §3`, description: "command.mutelist.description" },
                 { text: `  §7- §a!lagclear §7<§adefault§7/§amobs§7/§aall§7> §7- §3`, description: "command.lagclear.description" },
                 { text: `  §7- §a!give §7<§aitem§7> §7<§evalue§7> [§edata§7] §7- §3`, description: "command.give.description" },
                 { text: `  §7- §a!troll §7<§dtroll§7> §7<§eplayer§7> §7- §3`, description: "command.troll.description" },
@@ -217,7 +227,7 @@ export const main = {
                 { text: `  §7- §e!gapple §7- §3`, description: "command.gapple.description" },
                 { text: `  §7- §a!ecwipe §7<§eplayer§7> §7- §3`, description: "command.ecwipe.description" },
                 { text: `  §7- §e!ecsee §7<§eplayer§7> §7- §3`, description: "command.ecsee.description" },
-                { text: `  §7- §a!invsee §7<§eplayer§7> §7- §3`, description: "command.invsee.description" },
+                { text: `  §7- §e!invsee §7<§eplayer§7> §7- §3`, description: "command.invsee.description" },
                 { text: `  §7- §a!invwipe §7<§eplayer§7> §7- §3`, description: "command.invwipe.description" },
                 { text: `  §7- §a!pearl §7<§gduration§7> §7- §3`, description: "command.pearl.description" },
                 { text: `  §7- §a!rank §7<§aadd§7/§cremove§7> §7<§arank§7> §7[§gcolor§7] §7<§eplayer§7> §7- §3`, description: "command.rank.description" },
@@ -243,7 +253,9 @@ export const main = {
                 { text: `  §7- §a!cmdtoggle list §7- §3`, description: "command.cmdtogglelist.description" },
                 { text: `  §7- §a!chatdisplay §7<§eset§7/§cremove§7> §7<§achatstyle§7> §7- §3`, description: "command.chatdisplayset.description" },
                 { text: `  §7- §a!chatdisplay §7<§aenable§7/§cdisable§7> §7- §3`, description: "command.chatdisplay.description" },
-                { text: `  §7- §a!welcome §7<§ajoin§7/§cleave§7> §7<§eset§7/§cremove§7> §7[§atext§7] §7- §3`, description: "command.welcome.description" }
+                { text: `  §7- §a!welcome §7<§ajoin§7/§cleave§7> §7<§eset§7/§cremove§7> §7[§atext§7] §7- §3`, description: "command.welcome.description" },
+                { text: `  §7- §e/scriptevent bluemods:clearlogs §7- §3`, description: "command.clearlogs.description" },
+                { text: `  §7- §e/scriptevent bluemods:clearcommandlogs §7- §3`, description: "command.clearcommandlogs.description" }
             ]
         }
     ]

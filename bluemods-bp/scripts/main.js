@@ -12,6 +12,7 @@ import "./main/selection/playerInfo.js";
 import "./main/selection/playerRandomTP.js";
 import "./main/selection/playerTeleport.js";
 import "./main/selection/playerReport.js";
+import "./main/selection/playerEconomy.js";
 
 // Moderation Menu
 import "./main/moderation/playerModules.js";

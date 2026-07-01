@@ -341,13 +341,13 @@ export function getTime(timerInfo) { return formatTime(new Date(timerInfo.target
 export function ModulesPanel(player) {
     const form = new ActionFormData()
         .title(customFormUICodes.action.titles.formStyles.gridMenu + "§l§bBlueMods §7| §aModule States")
-        .body("§cWarning: Disabling this module may put the server at risk!\n§cOnly turn it off if you fully understand the consequences.");
+        .body("§eWarning: §cDisabling this module may put the server at risk!\n§cOnly turn it off if you fully understand the consequences.");
     Object.entries(main.Modules).forEach(([module, isEnabled]) => {
         const statusText = isEnabled ? "§aEnabled" : "§cDisabled";
         const statusIcon = isEnabled ? "textures/ui/realms_green_check.png" : "textures/ui/redX1.png";
         form.button(customFormUICodes.action.buttons.positions.main_only + `§e${module}\n§7[ ${statusText} §7]`, statusIcon);
     });
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
     form.show(player).then((response) => {
         if (response.canceled) return;
         if (response.selection < Object.keys(main.Modules).length) {
@@ -420,7 +420,10 @@ world.afterEvents.playerSpawn.subscribe((event) => {
     }
     if (!event.initialSpawn && CombatDatabase[player.id]?.clear) {
         delete CombatDatabase[player.id];
-        system.run(() => { player.runCommand('clear @s'); player.runCommand(`kill @s`); });
+        system.runInterval(() => {
+            player.runCommand('clear @s');
+            player.runCommand(`kill @s`);
+        }, 40);
         player.sendMessage('§7[§c!§7] §cYour inventory was cleared for combat logging!');
         addLog(player.name, "Combat Log", `Left the server while incombat`);
         world.getPlayers({ tags: ["notify"] }).forEach(admin => {
@@ -438,30 +441,41 @@ world.afterEvents.playerSpawn.subscribe((event) => {
 
 world.afterEvents.entityHurt.subscribe((event) => {
     if (!isModuleEnabled("inCombatLogging")) return;
+    
+    const victim = event.hurtEntity;
+    const attacker = event.damageSource.damagingEntity;
+    
+    if (victim?.typeId !== "minecraft:player") return;
+    if (attacker?.typeId !== "minecraft:player") return;
+    if (attacker.getGameMode() === "creative") return;
+    if (victim.getGameMode() === "creative") return;
+    
     if (event.damageSource.cause === "projectile") {
         if (!isProjectiles.includes(event.damageSource.damagingEntity?.typeId)) return;
     } else if (event.damageSource.cause !== "entityAttack") return;
-    const victim = event.hurtEntity;
-    const attacker = event.damageSource.damagingEntity;
-    if (attacker?.typeId === "minecraft:player") {
-        CombatDatabase[attacker.id] = { timer: setTimer(main.combatTimer, 'seconds'), victim: victim.id };
-        attacker.addTag('isCombat');
-    }
-    if (victim?.typeId === "minecraft:player") {
-        CombatDatabase[victim.id] = { timer: setTimer(main.combatTimer, 'seconds'), attacker: attacker.id };
-        victim.addTag('isCombat');
-    }
+    
+    CombatDatabase[attacker.id] = { timer: setTimer(main.combatTimer, 'seconds'), victim: victim.id };
+    attacker.addTag('isCombat');
+    
+    CombatDatabase[victim.id] = { timer: setTimer(main.combatTimer, 'seconds'), attacker: attacker.id };
+    victim.addTag('isCombat');
 }, { entityTypes: ["minecraft:player"] });
 
 world.afterEvents.projectileHitEntity.subscribe((event) => {
     if (!isModuleEnabled("inCombatLogging")) return;
+    
     const source = event.source;
     const hitEntity = event.getEntityHit()?.entity;
+    
     if (source?.typeId !== "minecraft:player") return;
     if (hitEntity?.typeId !== "minecraft:player") return;
+    if (source.getGameMode() === "creative") return;
+    if (hitEntity.getGameMode() === "creative") return;
     if (!isProjectiles.includes(event.projectile.typeId)) return;
+    
     CombatDatabase[source.id] = { timer: setTimer(main.combatTimer, 'seconds'), victim: hitEntity.id };
     source.addTag('isCombat');
+    
     CombatDatabase[hitEntity.id] = { timer: setTimer(main.combatTimer, 'seconds'), attacker: source.id };
     hitEntity.addTag('isCombat');
 });

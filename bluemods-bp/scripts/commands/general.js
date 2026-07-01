@@ -12,19 +12,6 @@ import main from "../config.js";
 //░███░░████░███░░████░█░█░░█░░███░░░████░░███░░
 // https://dsc.gg/bluemods
 
-function isCommandEnabled(commandName) {
-    return main.enabledCommands[commandName] !== undefined ? main.enabledCommands[commandName] : true;
-}
-
-const isAuthorized = (player, commandName) => {
-    if (!isCommandEnabled(commandName)) {
-        player.sendMessage(`§7[§b#§7] §cThis command §e${commandName} §cis currently disabled.`);
-        system.run(() => player.runCommand(`playsound random.break @s`));
-        return false;
-    }
-    return true;
-};
-
 const teleportingPlayers = new Map();
 const home_dynamic_property = "playerHome";
 const max_home_slots = 6;
@@ -133,7 +120,6 @@ Command.register({
     aliases: [],
 }, (data, args) => {
     const { player } = data;
-    if (!isAuthorized(player, "home")) return;
 
     const action = args[0]?.toLowerCase();
     const homeName = args[1];
@@ -171,7 +157,6 @@ Command.register({
     aliases: [],
 }, async (data) => {
     const { player } = data;
-    if (!isAuthorized(player, "ping")) return;
 
     await system.waitTicks(1);
 
@@ -204,8 +189,7 @@ Command.register({
     aliases: [],
 }, (data) => {
     const { player } = data;
-    if (!isAuthorized(player, "rtp")) return;
-    
+ 
     showRandomTPUI(player);
 });
 
@@ -219,7 +203,6 @@ Command.register({
     aliases: [],
 }, (data, args) => {
     const { player } = data;
-    if (!isAuthorized(player, "tpa")) return;
 
     if (!args[0]) {
         player.sendMessage(`§7[§b#§7] §cInvalid usage! Use §3!tpa §asend ${main.player} / §3!tpa §aaccept ${main.player} / §3!tpa §cdecline ${main.player} / §3!tpa §0block ${main.player} / §3!tpa §bunblock ${main.player}.`);
@@ -278,7 +261,6 @@ Command.register({
     aliases: [],
 }, (data) => {
     const { player } = data;
-    if (!isAuthorized(player, "echest")) return;
     const playerKey = `${player.id}:${PLAYER_COOLDOWN_KEY}`;
 
     const lastClaimTime = world.getDynamicProperty(playerKey) || 0;
@@ -497,7 +479,6 @@ Command.register({
     aliases: [],
 }, (data) => {
     const player = data.player;
-    if (!isAuthorized(player, "compass")) return;
 
     const inventory = player.getComponent("inventory")?.container;
     if (!inventory) return;
@@ -546,7 +527,6 @@ Command.register({
     aliases: [],
 }, (data) => {
     const { player } = data;
-    if (!isAuthorized(player, "back")) return;
 
     const playerName = player.name;
 
@@ -585,7 +565,6 @@ Command.register({
     aliases: [],
 }, (data, args) => {
     const { player } = data;
-    if (!isAuthorized(player, "warp")) return;
 
     const action = args[0]?.toLowerCase();
     const warpName = args[1];
@@ -652,19 +631,55 @@ Command.register({
 //
 
 const coordToggled = new Set();
+const coordSettings = new Map();
+let cachedTPS = 20;
+let tickCount = 0;
+let lastTime = Date.now();
+
+function getPlayerSettings(playerId) {
+    if (!coordSettings.has(playerId)) {
+        coordSettings.set(playerId, { showTPS: true, showCoords: true, showDimension: true });
+    }
+    return coordSettings.get(playerId);
+}
 
 system.runInterval(() => {
-    for (const player of world.getAllPlayers()) {
-        if (coordToggled.has(player.id)) {
-            const { x, y, z } = player.location;
-            const dimension = player.dimension.id.replace("minecraft:", "");
-            player.onScreenDisplay.setActionBar(`§aX: §e${Math.floor(x)} §aY: §e${Math.floor(y)} §aZ: §e${Math.floor(z)} §7| §b${dimension}`);
+    tickCount++;
+    const now = Date.now();
+    const elapsed = (now - lastTime) / 1000;
+    if (elapsed >= 1) {
+        cachedTPS = tickCount / elapsed;
+        tickCount = 0;
+        lastTime = now;
+    }
+
+    if (tickCount % 5 === 0) {
+        for (const player of world.getAllPlayers()) {
+            if (coordToggled.has(player.id)) {
+                const settings = getPlayerSettings(player.id);
+                const { x, y, z } = player.location;
+                const dimension = player.dimension.id.replace("minecraft:", "");
+                
+                let display = "";
+                if (settings.showTPS) display += `§aTPS: §e${cachedTPS.toFixed(1)}`;
+                if (settings.showCoords) {
+                    if (display) display += " §7|";
+                    display += ` §aX: §e${Math.floor(x)} §aY: §e${Math.floor(y)} §aZ: §e${Math.floor(z)}`;
+                }
+                if (settings.showDimension) {
+                    if (display) display += " §7|";
+                    display += ` §b${dimension}`;
+                }
+                
+                player.onScreenDisplay.setActionBar(display || "§cAll modules disabled");
+            }
         }
     }
-}, 5);
+}, 1);
 
 world.afterEvents.playerLeave.subscribe(({ playerId }) => {
     coordToggled.delete(playerId);
+    coordSettings.delete(playerId);
 });
 
 Command.register({
@@ -673,27 +688,72 @@ Command.register({
     aliases: [],
 }, (data, args) => {
     const { player } = data;
-    if (!isAuthorized(player, "coordtoggle")) return;
     const action = args[0]?.toLowerCase();
+    const module = args[1]?.toLowerCase();
 
-    if (action === "enable") {
-        coordToggled.add(player.id);
-        player.sendMessage("§7[§a+§7] §aCoordinates enabled.");
+    if (action === "list") {
+        const settings = getPlayerSettings(player.id);
+        player.sendMessage([
+            `§7[§b#§7] §aYour Coordinate Modules:`,
+            `§7TPS: ${settings.showTPS ? "§aEnabled" : "§cDisabled"}`,
+            `§7Coordinates: ${settings.showCoords ? "§aEnabled" : "§cDisabled"}`,
+            `§7Dimension: ${settings.showDimension ? "§aEnabled" : "§cDisabled"}`
+        ].join("\n"));
+        return;
+    }
+
+    if (action === "enable" || action === "disable") {
+        if (!module || !["tps", "coordinates", "dimensions"].includes(module)) {
+            player.sendMessage(`§7[§c-§7] §cInvalid module! Use: §3!coordtoggle ${action} §7<§atps§7/§ecoordinates§7/§bdimensions§7> §7or §3!coordtoggle §alist`);
+            return;
+        }
+
+        const settings = getPlayerSettings(player.id);
+        const enabled = action === "enable";
+        const moduleName = module === "coordinates" ? "Coords" : module.charAt(0).toUpperCase() + module.slice(1);
+
+        switch (module) {
+            case "tps": settings.showTPS = enabled; break;
+            case "coordinates": settings.showCoords = enabled; break;
+            case "dimensions": settings.showDimension = enabled; break;
+        }
+
+        if (enabled) {
+            coordToggled.add(player.id);
+        } else if (!settings.showTPS && !settings.showCoords && !settings.showDimension) {
+            coordToggled.delete(player.id);
+        }
+
+        player.sendMessage(`§7[${enabled ? "§a+§7" : "§c-§7"}] §7${moduleName} §f${enabled ? "§aEnabled" : "§cDisabled"}.`);
         system.run(() => player.runCommand('playsound note.bell @s'));
-    } else if (action === "disable") {
-        coordToggled.delete(player.id);
-        player.onScreenDisplay.setActionBar("");
-        player.sendMessage("§7[§c-§7] §cCoordinates disabled.");
-        system.run(() => player.runCommand('playsound note.bell @s'));
-    } else {
+        return;
+    }
+
+    if (!action) {
         if (coordToggled.has(player.id)) {
             coordToggled.delete(player.id);
-            player.onScreenDisplay.setActionBar("");
-            player.sendMessage("§7[§c-§7] §cCoordinates disabled.");
+            player.sendMessage("§7[§c-§7] §fPersonal Coordinates §cDisabled.");
         } else {
             coordToggled.add(player.id);
-            player.sendMessage("§7[§a+§7] §aCoordinates enabled.");
+            player.sendMessage("§7[§a+§7] §fPersonal Coordinates §aEnabled.");
         }
         system.run(() => player.runCommand('playsound note.bell @s'));
+    } else {
+        player.sendMessage(`§7[§c-§7] §cInvalid action! Use: §3!coordtoggle ${main.enabledisable} §7<§atps§7/§ecoordinates§7/§bdimensions§7> §7or §3!coordtoggle §alist`);
     }
+});
+
+//
+//  Auction House Command
+//
+
+import { showEconomy } from "../main/selection/playerEconomy.js";
+ 
+Command.register({
+    name: "auctionhouse",
+    description: "",
+    aliases: ["ah"],
+}, (data, args) => {
+    const { player } = data;
+    system.run(() => showEconomy(player));
 });

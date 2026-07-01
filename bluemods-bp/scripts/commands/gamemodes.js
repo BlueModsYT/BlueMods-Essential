@@ -10,19 +10,6 @@ import main from "../config.js";
 //░███░░████░███░░████░█░█░░█░░███░░░████░░███░░
 // https://dsc.gg/bluemods
 
-function isCommandEnabled(commandName) {
-    return main.enabledCommands[commandName] !== undefined ? main.enabledCommands[commandName] : true;
-}
-
-const isAuthorized = (player, commandName) => {
-    if (!isCommandEnabled(commandName)) {
-        player.sendMessage(`§7[§b#§7] §cThis command §e${commandName} §cis currently disabled.`);
-        system.run(() => player.runCommand(`playsound random.break @s`));
-        return false;
-    }
-    return true;
-};
-
 Command.register({
     name: "gma",
     description: "",
@@ -30,7 +17,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "gma")) return;
     
     const targetName = args[0] || player.name;
     const [targetPlayer] = world.getPlayers({ name: targetName });
@@ -54,7 +40,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "gmc")) return;
     
     const targetName = args[0] || player.name;
     const [targetPlayer] = world.getPlayers({ name: targetName });
@@ -78,7 +63,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "gms")) return;
     
     const targetName = args[0] || player.name;
     const [targetPlayer] = world.getPlayers({ name: targetName });
@@ -102,7 +86,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "gmsp")) return;
     
     const targetName = args[0] || player.name;
     const [targetPlayer] = world.getPlayers({ name: targetName });
@@ -126,7 +109,6 @@ Command.register({
     permission: (player) => player.hasTag(main.adminTag),
 }, (data, args) => {
     const player = data.player;
-    if (!isAuthorized(player, "vanish")) return;
     
     const targetName = args[0] || player.name;
     const [targetPlayer] = world.getPlayers({ name: targetName });

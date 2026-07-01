@@ -103,7 +103,7 @@ function formatChatMessage(player, message) {
     const tags = player.getTags();
     let ranks = tags.filter(tag => tag.startsWith('rank:')).map(tag => tag.replace('rank:', ''));
 
-    const creatorRank = main.ranks?.find(r => r.name === player.name);
+    const creatorRank = main.creatorRanks?.find(r => r.name === player.name);
     if (creatorRank) {
         ranks.unshift(`${creatorRank.icon} ${creatorRank.tag}`);
     }
@@ -286,7 +286,7 @@ export function ChatConfigurationPanel(player) {
     form.button(customFormUICodes.action.buttons.positions.main_only + "Chat Ranks", "textures/ui/icon_book_writable")
         .button(customFormUICodes.action.buttons.positions.main_only + "Chat Display", "textures/ui/icon_book_writable")
         .button(customFormUICodes.action.buttons.positions.main_only + "Chat Config", "textures/ui/icon_book_writable")
-        .button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+        .button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled) return;
@@ -312,7 +312,7 @@ function ChatDisplayPanel(player) {
         .button(customFormUICodes.action.buttons.positions.main_only + "§eDefault Chat Format", "textures/ui/minus")
         .button(customFormUICodes.action.buttons.positions.main_only + "§aEnable Chat Display", "textures/ui/realms_green_check.png")
         .button(customFormUICodes.action.buttons.positions.main_only + "§cDisable Chat Display", "textures/ui/redX1.png")
-        .button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+        .button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled) return;
@@ -340,7 +340,7 @@ function ChatDisplayPanel(player) {
 
 function setChatFormatPanel(player) {
     const form = new ModalFormData()
-        .title("§l§bBlueMods §7| §aSet Chat Format")
+        .title(customFormUICodes.modal.titles.formStyles.general + "§l§bBlueMods §7| §aSet Chat Format")
         .textField(
             "Enter the chat format:\n\nPlaceholders:\n{name} - Player's name\n{rank} - Player's rank\n{message} - Player's message\n\nExample: {rank} {name}: {message}",
             "{rank} {name}: {message}"
@@ -369,7 +369,7 @@ function ChatConfigPanel(player) {
         form.button(customFormUICodes.action.buttons.positions.main_only + `§e${key}`, statusIcon);
     }
     
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled) return;
@@ -396,7 +396,7 @@ function ChatRanksPanel(player) {
     form.button(customFormUICodes.action.buttons.positions.main_only + "§aAdd Rank", "textures/ui/color_plus")
         .button(customFormUICodes.action.buttons.positions.main_only + "§cRemove Rank", "textures/ui/minus")
         .button(customFormUICodes.action.buttons.positions.main_only + "§eEdit Rank", "textures/ui/editIcon")
-        .button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+        .button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled) return;
@@ -419,7 +419,7 @@ function AddRankPanel_SelectPlayerPanel(player) {
         form.button(customFormUICodes.action.buttons.positions.main_only + `§a${p.name}`, "textures/ui/icon_steve");
     });
 
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled || response.selection === onlinePlayers.length + 1) return;
@@ -434,27 +434,34 @@ function AddRankPanel_SelectPlayerPanel(player) {
 }
 
 function AddRankPanel(player, targetPlayer) {
+    const rankIcons = Object.entries(main.ranksIcon).map(([name]) => name);
+    rankIcons.unshift("None");
+    
     const form = new ModalFormData()
-        .title("§l§bBlueMods §7| §aAdd Chat Rank")
+        .title(customFormUICodes.modal.titles.formStyles.general + "§l§bBlueMods §7| §aAdd Chat Rank")
         .textField("Enter the rank name:", "Example: Moderator")
         .textField(
             `Available Colors: \n(${Object.entries(main.colors).map(([name, code]) => `${code}${name}`).join("§f, ")})\n\n§rEnter the rank color:`, 
             "Enter Color Name: "
-        );
+        )
+        .dropdown("Select Rank Icon (Optional):", rankIcons);
 
     form.show(player).then((response) => {
         if (response.canceled) return;
 
         const rankName = response.formValues[0]?.trim();
-        const rankColor = main.colors[response.formValues[1]?.trim()] || ""; 
+        const rankColor = main.colors[response.formValues[1]?.trim()] || "";
+        const iconIndex = response.formValues[2];
+        const iconKey = rankIcons[iconIndex];
+        const icon = iconKey !== "None" ? main.ranksIcon[iconKey] : "";
 
         if (!rankName) {
             player.sendMessage("§7[§b#§7] §cRank name cannot be empty!");
             return;
         }
 
-        system.run(() => player.runCommand(`tag "${targetPlayer}" add "rank:${rankColor}${rankName}"`));
-        player.sendMessage(`§7[§b#§7] §aAssigned rank §r${rankColor}${rankName} §ato §e${targetPlayer}§a.`);
+        system.run(() => player.runCommand(`tag "${targetPlayer}" add "rank:${icon} ${rankColor}${rankName}"`));
+        player.sendMessage(`§7[§b#§7] §aAssigned rank ${icon} §r${rankColor}${rankName} §ato §e${targetPlayer}§a.`);
         system.run(() => player.runCommand("playsound random.levelup @s"));
     }).catch((error) => console.error("Failed to show add rank panel:", error));
 }
@@ -469,7 +476,7 @@ function RemoveRankPanel(player) {
         form.button(customFormUICodes.action.buttons.positions.main_only + `§a${p.name}`, "textures/ui/icon_steve");
     });
 
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled || response.selection === onlinePlayers.length + 1) return;
@@ -499,7 +506,7 @@ function RemoveRankListPanel(player, targetPlayer) {
         form.body(`${targetPlayer.name} has no assigned ranks.`);
     }
 
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled || response.selection === rankTags.length + 1) return;
@@ -544,7 +551,7 @@ function EditRankPanel(player) {
         form.button(customFormUICodes.action.buttons.positions.main_only + "§a" + p.name, "textures/ui/icon_steve");
     });
 
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled || response.selection === onlinePlayers.length + 1) return;
@@ -574,7 +581,7 @@ function EditRankListPanel(player, targetPlayer) {
         form.body(`${targetPlayer.name} has no assigned ranks.`);
     }
 
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled || response.selection === rankTags.length + 1) return;
@@ -590,19 +597,26 @@ function EditRankListPanel(player, targetPlayer) {
 
 function EditRankDetailsPanel(player, targetPlayer, selectedRank) {
     const currentRankName = selectedRank.replace("rank:", "");
+    const rankIcons = Object.entries(main.ranksIcon).map(([name]) => name);
+    rankIcons.unshift("None");
+    
     const form = new ModalFormData()
-        .title(`§l§aEdit Rank: ${currentRankName}`)
+        .title(customFormUICodes.modal.titles.formStyles.general + `§l§aEdit Rank: ${currentRankName}`)
         .textField("Enter new rank name:", "Example: Admin")
         .textField(
             `Available Colors: (${Object.entries(main.colors).map(([name, code]) => `${code}${name}`).join(", ")})\n§rEnter the rank color:`, 
             "Enter the Color Name: "
-        );
+        )
+        .dropdown("Select Rank Icon (Optional):", rankIcons);
 
     form.show(player).then((response) => {
         if (response.canceled) return;
 
         const newName = response.formValues[0]?.trim();
         const rankColor = main.colors[response.formValues[1]?.trim()] || "";
+        const iconIndex = response.formValues[2];
+        const iconKey = rankIcons[iconIndex];
+        const icon = iconKey !== "None" ? main.ranksIcon[iconKey] : "";
 
         if (!newName) {
             player.sendMessage("§7[§b#§7] §cRank name cannot be empty!");
@@ -610,8 +624,8 @@ function EditRankDetailsPanel(player, targetPlayer, selectedRank) {
         }
 
         targetPlayer.removeTag(selectedRank);
-        targetPlayer.addTag(`rank:${rankColor}${newName}`);
-        player.sendMessage(`§7[§b#§7] §aUpdated rank to: §r${rankColor}${newName} §afor §e${targetPlayer.name}§a.`);
+        targetPlayer.addTag(`rank:${icon}${rankColor}${newName}`);
+        player.sendMessage(`§7[§b#§7] §aUpdated rank to: ${icon}§r${rankColor}${newName} §afor §e${targetPlayer.name}§a.`);
         system.run(() => player.runCommand("playsound random.levelup @s"));
     }).catch((error) => console.error("Failed to show edit rank details panel:", error));
 }
