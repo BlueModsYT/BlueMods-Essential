@@ -18,7 +18,7 @@
         "product_type": "addon"
     },
     "header": {
-        "name": "§l§7[§9RP§7] §bBlueMods §9Essential §gBeta-v1.0.0§r",
+        "name": "§l§7[§9RP§7] §bBlueMods §9Essential §gBeta-v1.0.2§r",
         "description": "An all-in-one Minecraft Bedrock addon designed to provide essential for both Realms and dedicated servers. Required to turn on §c(Beta-API + Education Edition) §rMade by BlueMods",
         "uuid": "a0ce76fc-6657-48ad-8f1f-7623614c4572",
         "min_engine_version": [
@@ -29,7 +29,7 @@
         "version": [
             1,
             0,
-            0
+            2
         ]
     },
     "modules": [
@@ -49,7 +49,7 @@
             "version": [
                 1,
                 0,
-                0
+                2
             ]
         }
     ]
