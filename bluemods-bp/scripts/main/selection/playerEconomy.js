@@ -78,6 +78,11 @@ function removePlayerMoney(player, amount) {
     return false;
 }
 
+function getItemDisplayName(typeId) {
+    const name = typeId.replace("minecraft:", "").replace(/_/g, " ");
+    return name.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+}
+
 function queueMoney(playerId, amount) {
     const data = world.getDynamicProperty(PENDING_MONEY_KEY);
     const pending = data ? JSON.parse(data) : {};
@@ -334,7 +339,7 @@ function showMyRequests(player) {
     requests.forEach(req => {
         const status = req.status === "pending" ? "§ePending" : req.status === "approved" ? "§aApproved" : "§cRejected";
         form.button(
-            customFormUICodes.action.buttons.positions.main_only + `§e${req.itemType.replace("minecraft:", "")} x${req.amount}\n§7Price: §2$${req.price} §7| ${status}`,
+            customFormUICodes.action.buttons.positions.main_only + `§e${getItemDisplayName(req.itemType)} x${req.amount}\n§7Price: §2$${req.price} §7| ${status}`,
             "textures/items/name_tag"
         );
     });
@@ -407,7 +412,7 @@ function showAuctionShop(player) {
 
     items.forEach(item => {
         form.button(
-            customFormUICodes.action.buttons.positions.main_only + `§e${item.itemType.replace("minecraft:", "")} x${item.amount}\n§7Seller: §e${item.seller}\n§7Price: §2$${item.price}\n§7${item.description}`,
+            customFormUICodes.action.buttons.positions.main_only + `§e${getItemDisplayName(item.itemType)} x${item.amount}\n§7Seller: §e${item.seller}\n§7Price: §2$${item.price}\n§7${item.description}`,
             "textures/ui/sidebar_icons/marketplace"
         );
     });
@@ -440,10 +445,10 @@ function purchaseAuctionItem(player, item) {
     const form = new ActionFormData()
         .title(customFormUICodes.action.titles.formStyles.gridMenu + "§l§bBlueMods §7| §aConfirm Purchase")
         .body(
-            `Item: §e${item.itemType.replace("minecraft:", "")} x${item.amount}\n` +
-            `Seller: §e${item.seller}\n` +
-            `Price: §2$${item.price}\n\n` +
-            `§aYour balance: §2$${buyerMoney}`
+            `§fItem: §e${getItemDisplayName(item.itemType)} x${item.amount}\n` +
+            `§fSeller: §e${item.seller}\n` +
+            `§fPrice: §2$${item.price}\n\n` +
+            `§fYour balance: §2$§a${buyerMoney}`
         )
         .button(customFormUICodes.action.buttons.positions.left_side_only + "§aConfirm Purchase", "textures/ui/realms_green_check.png")
         .button(customFormUICodes.action.buttons.positions.left_side_only + "§cCancel", "textures/ui/redX1.png");
@@ -490,7 +495,7 @@ function purchaseAuctionItem(player, item) {
             seller.sendMessage(`§7[§a+§7] §aYour item §e${item.itemType.replace("minecraft:", "")} §awas purchased by §e${player.name} §afor §2$${item.price}§a.`);
         }
 
-        player.sendMessage(`§7[§a+§7] §aPurchased §e${item.itemType.replace("minecraft:", "")} x${item.amount} §afor §2$${item.price}§a.`);
+        player.sendMessage(`§7[§a+§7] §aPurchased §e${getItemDisplayName(item.itemType)} x${item.amount} §afor §2$${item.price}§a.`);
     });
 }
 
@@ -537,7 +542,7 @@ function showPendingRequests(player) {
 
     requests.forEach(req => {
         form.button(customFormUICodes.action.buttons.positions.main_only + 
-            `§e${req.seller} §7- §e${req.itemType.replace("minecraft:", "")} x${req.amount}\n§7Price: §2$${req.price}\n§7${req.description}`,
+            `§e${req.seller} §7- §e${getItemDisplayName(req.itemType)} x${req.amount}\n§7Price: §2$${req.price}\n§7${req.description}`,
             "textures/items/name_tag"
         );
     });
@@ -557,9 +562,9 @@ function showRequestAction(player, request) {
     const form = new ActionFormData()
         .title(customFormUICodes.action.titles.formStyles.gridMenu + "§l§bBlueMods §7| §aRequest Action")
         .body(
-            `Seller: §e${request.seller}\n\n` +
+            `§fSeller: §e${request.seller}\n\n` +
             `§fItem: §e${request.itemType.replace("minecraft:", "")} x${request.amount}\n\n` +
-            `§fPrice: §a$${request.price}\n\n` +
+            `§fPrice: §2$§a${request.price}\n\n` +
             `§fDescription: §e${request.description}`
         )
         .button(customFormUICodes.action.buttons.positions.main_only + "§aApprove", "textures/ui/realms_green_check.png")
@@ -641,7 +646,7 @@ function showAdminAuctionList(player) {
 
     items.forEach(item => {
         form.button(customFormUICodes.action.buttons.positions.main_only + 
-            `§e${item.itemType.replace("minecraft:", "")} x${item.amount}\n§7Seller: §e${item.seller} §7- §2$${item.price}`,
+            `§e${getItemDisplayName(item.itemType)} x${item.amount}\n§7Seller: §e${item.seller} §7- §2$${item.price}`,
             "textures/ui/sidebar_icons/marketplace"
         );
     });
@@ -661,7 +666,7 @@ function confirmRemoveAuctionItem(player, item) {
     const form = new ActionFormData()
         .title(customFormUICodes.action.titles.formStyles.gridMenu + "§l§cRemove Auction Item")
         .body(
-            `Item: §e${item.itemType.replace("minecraft:", "")} x${item.amount}\n\n` +
+            `§fItem: §e${getItemDisplayName(item.itemType)} x${item.amount}\n\n` +
             `§fSeller: §e${item.seller}\n\n` +
             `§fPrice: §a$${item.price}\n\n` +
             `§cThe item will be returned to the seller.`
