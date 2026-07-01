@@ -287,32 +287,45 @@ function consolidateInventory(player) {
     if (!isModuleEnabled("removeDupeStackedInventory")) return;
     const inventory = player.getComponent("minecraft:inventory")?.container;
     if (!inventory) return;
+    
     for (let i = 0; i < inventory.size; i++) {
         const currentItem = inventory.getItem(i);
         if (!currentItem) continue;
+        
         const id = currentItem.typeId;
         const amount = Number(currentItem.amount);
+        const maxStack = currentItem.maxAmount || 64;
+        
+        if (maxStack === 1 || isEnchant.includes(id)) continue;
+        
         if (isNaN(amount) || amount <= 0) continue;
-        if (isEnchant.includes(id)) continue;
+        
         let remaining = amount;
+        
         for (let j = 0; j < i; j++) {
             if (remaining <= 0) break;
             const targetItem = inventory.getItem(j);
             if (!targetItem) continue;
-            if (targetItem.typeId === id && !isEnchant.includes(id)) {
+            
+            if (targetItem.typeId === id && targetItem.maxAmount > 1 && !isEnchant.includes(id)) {
                 const targetAmount = Number(targetItem.amount);
-                if (isNaN(targetAmount) || targetAmount >= 64) continue;
-                const spaceAvailable = 64 - targetAmount;
+                if (isNaN(targetAmount) || targetAmount >= maxStack) continue;
+                const spaceAvailable = maxStack - targetAmount;
                 const amountToAdd = Math.min(remaining, spaceAvailable);
-                if (amountToAdd > 0) { inventory.setItem(j, new ItemStack(id, targetAmount + amountToAdd)); remaining -= amountToAdd; }
+                if (amountToAdd > 0) { 
+                    inventory.setItem(j, new ItemStack(id, targetAmount + amountToAdd)); 
+                    remaining -= amountToAdd; 
+                }
             }
         }
-        if (remaining > 0) { inventory.setItem(i, new ItemStack(id, remaining)); }
-        else { inventory.setItem(i, undefined); }
+        
+        if (remaining > 0 && remaining !== amount) { 
+            inventory.setItem(i, new ItemStack(id, remaining)); 
+        } else if (remaining <= 0) { 
+            inventory.setItem(i, undefined); 
+        }
     }
 }
-
-
 
 export function setTimer(value, unit) {
     const targetDate = new Date();
