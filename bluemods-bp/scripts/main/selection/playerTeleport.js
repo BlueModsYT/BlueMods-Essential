@@ -28,7 +28,7 @@ export function showTeleportUI(player) {
         .button(customFormUICodes.action.buttons.positions.main_only + "§fIncoming", "textures/items/ender_pearl")
         .button(customFormUICodes.action.buttons.positions.main_only + "§dBlock List", "textures/items/blaze_powder")
         .button(customFormUICodes.action.buttons.positions.main_only + toggleButton.text, toggleButton.icon)
-        .button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+        .button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled) return player.sendMessage("§7[§b#§7] §cTeleport request menu closed.");
@@ -67,7 +67,7 @@ export function showPlayerSelectionForm(player) {
         .body("Choose a player to send a teleport request:");
     
     players.forEach(p => form.button(customFormUICodes.action.buttons.positions.main_only + "§a" + p.name, "textures/ui/icon_steve"));
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled || response.selection === players.length + 1) return player.sendMessage("§7[§b#§7] §cPlayer selection canceled.");
@@ -92,7 +92,7 @@ export function showBlockList(player) {
         form.button(customFormUICodes.action.buttons.positions.main_only + `${isBlocked ? "§dUnblock" : "§dBlock"}§7: §a${p.name}`, "textures/ui/icon_steve");
     });
     
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled) return;
@@ -247,7 +247,7 @@ export function showOutgoingRequests(player) {
     
     outgoing.forEach(req => form.button(customFormUICodes.action.buttons.positions.main_only + `§cCancel request to §e${req.targetName}`, "textures/ui/icon_steve"));
     
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled) return;
@@ -274,7 +274,7 @@ export function showIncomingRequests(player) {
     
     incomingRequests.forEach(req => form.button(customFormUICodes.action.buttons.positions.main_only + `§e${req.senderName}`, "textures/ui/icon_steve"));
     
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled) return;

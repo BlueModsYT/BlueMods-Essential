@@ -38,7 +38,7 @@ export function showWarpsUI(player) {
         form.button(customFormUICodes.action.buttons.positions.main_only + "§cRemove Warp", "textures/ui/minus");
     }
 
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled) return;
@@ -168,7 +168,7 @@ export function teleportWarp(player, warpName) {
 
 export function showSetWarpForm(player) {
     const form = new ModalFormData()
-        .title("§l§bBlueMods §7| §aSet New Warp")
+        .title(customFormUICodes.modal.titles.formStyles.general + "§l§bBlueMods §7| §aSet New Warp")
         .textField("Enter warp name:", "Name");
 
     form.show(player).then((response) => {
@@ -198,7 +198,7 @@ export function showRemoveWarpForm(player) {
     }
 
     const form = new ModalFormData()
-        .title("§l§bBlueMods §7| §cRemove Warp")
+        .title(customFormUICodes.modal.titles.formStyles.general + "§l§bBlueMods §7| §cRemove Warp")
         .dropdown("Select warp to remove:", Object.keys(warps));
 
     form.show(player).then((response) => {

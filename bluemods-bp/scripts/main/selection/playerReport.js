@@ -124,7 +124,7 @@ export function showReportUI(player) {
     const onlinePlayers = world.getPlayers().map(p => p.name);
 
     const form = new ModalFormData()
-        .title(customFormUICodes.action.titles.formStyles.gridMenu + "§l§bBlueMods §7| §eReport User")
+        .title(customFormUICodes.modal.titles.formStyles.general + "§l§bBlueMods §7| §eReport User")
         .dropdown("Select a Player to Report:", onlinePlayers.length > 0 ? onlinePlayers : ["No players online"])
         .textField("Or Enter Player Name:", "Type the player's name...")
         .dropdown("Select Report Type:", ["Advertisement", "Cheating", "Harassment", "Spamming", "Other"])
@@ -188,7 +188,7 @@ export function ReportManagePanel(player, page = 0) {
         const form = new ActionFormData()
             .title(customFormUICodes.action.titles.formStyles.gridMenu + "§l§bBlueMods §7| §eManage Reports")
             .body("§aThere are no active reports.")
-            .button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+            .button(customFormUICodes.action.buttons.positions.left_side_only + "Back", "textures/items/tipped_arrow_fireres");
 
         form.show(player).then((response) => {
             if (response.canceled) return;
@@ -215,7 +215,7 @@ export function ReportManagePanel(player, page = 0) {
     if (page < totalPages - 1) {
         form.button(customFormUICodes.action.buttons.positions.main_only + "§aNext Page", "textures/ui/arrow_right");
     }
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled) return;
@@ -250,7 +250,7 @@ function manageReportDetails(player, report, returnPage) {
         )
         .button(customFormUICodes.action.buttons.positions.main_only + "§aResolve Report", "textures/ui/realms_green_check.png")
         .button(customFormUICodes.action.buttons.positions.main_only + "§cDelete Report", "textures/ui/redX1.png")
-        .button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+        .button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled || response.selection === 2) {

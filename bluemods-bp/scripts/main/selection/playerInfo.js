@@ -60,7 +60,7 @@ export function showInfoUI(player) {
             `§b${user.mehmet.name} §7- §f${user.mehmet.description}${mehmetSocials}${betaList}`
         );
     
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled) return;

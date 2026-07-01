@@ -29,7 +29,7 @@ export function showHomeUI(player) {
     form.button(customFormUICodes.action.buttons.positions.main_only + "§eSet Home", "textures/items/bed_yellow")
         .button(customFormUICodes.action.buttons.positions.main_only + "§cRemove Home", "textures/items/bed_red")
         .button(customFormUICodes.action.buttons.positions.main_only + "§bList Homes", "textures/items/bed_blue")
-        .button(customFormUICodes.action.buttons.positions.title_bar_only + "§gBack", "textures/items/tipped_arrow_fireres");
+        .button(customFormUICodes.action.buttons.positions.left_side_only + "§gBack", "textures/items/tipped_arrow_fireres");
 
     form.show(player).then((response) => {
         if (response.canceled) return;
@@ -65,7 +65,7 @@ export function showHomeUI(player) {
 
 function showSetHomeForm(player) {
     const form = new ModalFormData()
-        .title(customFormUICodes.action.titles.formStyles.gridMenu + "§l§bBlueMods §7| §aSet Home")
+        .title(customFormUICodes.modal.titles.formStyles.general + "§l§bBlueMods §7| §aSet Home")
         .textField("Enter a name for your home:", "Home Name");
 
     form.show(player).then((response) => {
@@ -97,7 +97,7 @@ function showRemoveHomeForm(player) {
     }
 
     const form = new ModalFormData()
-        .title(customFormUICodes.action.titles.formStyles.gridMenu + "§l§bBlueMods §7| §aRemove Home")
+        .title(customFormUICodes.modal.titles.formStyles.general + "§l§bBlueMods §7| §aRemove Home")
         .dropdown("Select a home to remove:", Object.keys(homes));
 
     form.show(player).then((response) => {
