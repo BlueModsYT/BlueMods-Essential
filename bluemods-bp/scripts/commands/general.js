@@ -748,12 +748,28 @@ Command.register({
 //
 
 import { showEconomy } from "../main/selection/playerEconomy.js";
- 
+
 Command.register({
     name: "auctionhouse",
     description: "",
     aliases: ["ah"],
 }, (data, args) => {
     const { player } = data;
-    system.run(() => showEconomy(player));
+    player.sendMessage("§7[!] §aOpening Auction House...");
+
+    let attempts = 0;
+    const maxAttempts = 10;
+    const interval = system.runInterval(() => {
+        if (attempts >= maxAttempts) {
+            system.clearRun(interval);
+            player.sendMessage("§7[§c-§7] §cCould not open Auction House. Please close any open windows and try again.");
+            return;
+        }
+        try {
+            showEconomy(player);
+            system.clearRun(interval);
+        } catch (e) {
+            attempts++;
+        }
+    }, 20);
 });
